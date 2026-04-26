@@ -2,6 +2,8 @@ package net.buildtheearth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.buildtheearth.model.GeographicalCoordinate;
+import net.buildtheearth.model.MinecraftCoordinate;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -18,7 +20,7 @@ public class ProjectionTest {
 	private static final double EPSILON = 1.0e-3;
 
 	@Test
-	void allCoordinatePairsFromJsonAreProjected() throws IOException {
+	void allCoordinatePairsFromJsonAreProjected() throws IOException, OutOfProjectionBoundsException {
 		Path coordinatePairsFile = resolveCoordinatePairsFile();
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -37,10 +39,11 @@ public class ProjectionTest {
 			CoordinatePair pair = coordinatePairs.pairs.get(i);
 
 			assertNotNull(pair, "Coordinate pair at index " + i + " must not be null");
+			GeographicalCoordinate geographicalCoordinate = new GeographicalCoordinate(pair.lat, pair.lon);
 
-			double[] projected = Projection.convertFromGeo(pair.lat, pair.lon);
-			assertEquals(pair.x, projected[0], EPSILON, "x mismatch at pair index " + i);
-			assertEquals(pair.z, projected[1], EPSILON, "z mismatch at pair index " + i);
+			MinecraftCoordinate projected = Projection.convertFromGeo(geographicalCoordinate);
+			assertEquals(pair.x, projected.x(), EPSILON, "x mismatch at pair index " + i);
+			assertEquals(pair.z, projected.z(), EPSILON, "z mismatch at pair index " + i);
 		}
 	}
 

@@ -1,5 +1,8 @@
 package net.buildtheearth;
 
+import net.buildtheearth.model.GeographicalCoordinate;
+import net.buildtheearth.model.MinecraftCoordinate;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -24,32 +27,51 @@ public class Projection {
     /**
      * Converts Minecraft coordinates to geographic coordinates
      *
-     * @param xCords - Minecraft player x-axis coordinates
-     * @param yCords - Minecraft player y-axis coordinates
-     * @return - WG84 EPSG:4979 coordinates as double array {lon,lat} in degrees
+     * @param coordinate The minecraft coordinates to convert.
+     * @return - WG84 EPSG:4979 coordinates as a GeographicalCoordinate object
      */
-    public static double[] convertToGeo(double xCords, double yCords) {
-        try {
-            double[] res = projection.toGeo(xCords, yCords);
-            return new double[]{res[1], res[0]};
-        } catch (OutOfProjectionBoundsException e) {
-            return new double[]{0., 0.};
+    public static GeographicalCoordinate convertToGeo(MinecraftCoordinate coordinate) throws OutOfProjectionBoundsException {
+        double[] res = projection.toGeo(coordinate.x(), coordinate.z());
+        return new GeographicalCoordinate(res[0], res[1]);
+    }
+
+    /**
+     * Converts Minecraft coordinates to geographic coordinates
+     *
+     * @param coordinates The minecraft coordinates to convert.
+     * @return - WG84 EPSG:4979 coordinates as a GeographicalCoordinate object
+     */
+    public static GeographicalCoordinate[] convertToGeo(MinecraftCoordinate[] coordinates) throws OutOfProjectionBoundsException {
+        GeographicalCoordinate[] res = new GeographicalCoordinate[coordinates.length];
+        for (int i = 0; i < coordinates.length; i++) {
+            res[i] = convertToGeo(coordinates[i]);
         }
+        return res;
     }
 
     /**
      * Gets in-game coordinates from geographical location
      *
-     * @param lon Geographical Longitude
-     * @param lat Geographic Latitude
+     * @param coordinate Geographical coordinate
      * @return The in-game coordinates (x, z)
      */
-    public static double[] convertFromGeo(double lat, double lon) {
-        try {
-            return projection.fromGeo(lon, lat);
-        } catch (OutOfProjectionBoundsException e) {
-            return new double[]{0., 0.};
+    public static MinecraftCoordinate convertFromGeo(GeographicalCoordinate coordinate) throws OutOfProjectionBoundsException {
+            double[] result = projection.fromGeo(coordinate.longitude(), coordinate.latitude());
+            return new MinecraftCoordinate(result[0], result[1]);
+    }
+
+    /**
+     * Gets in-game coordinates from geographical locations
+     *
+     * @param coordinate Geographical coordinates
+     * @return The in-game coordinates (x, z)
+     */
+    public static MinecraftCoordinate[] convertFromGeo(GeographicalCoordinate[] coordinate) throws OutOfProjectionBoundsException {
+        MinecraftCoordinate[] res = new MinecraftCoordinate[coordinate.length];
+        for (int i = 0; i < coordinate.length; i++) {
+            res[i] = convertFromGeo(coordinate[i]);
         }
+        return res;
     }
 
     /**
