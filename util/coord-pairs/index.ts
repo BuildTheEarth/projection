@@ -63,7 +63,7 @@ const main = async (): Promise<void> => {
     .map((pair) => `${pair.lat},${pair.lon},${pair.x},${pair.z}`)
     .join("\n");
   await writeFile(
-    resolve(outDir, "coord-pairs.json"),
+    resolve(outDir, "coord-pairs.csv"),
     csvHeader + csvRows + "\n",
     "utf8",
   );
