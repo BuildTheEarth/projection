@@ -3,6 +3,8 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+const DEFAULT_COUNT = 100;
+
 type CoordinatePair = {
   lat: number;
   lon: number;
@@ -40,16 +42,58 @@ const generatePairs = (count: number): CoordinatePair[] => {
   return pairs;
 };
 
+const parseCountFromArgs = (args: string[]): number => {
+  let countArg: string | undefined;
+
+  for (const [i, arg] of args.entries()) {
+
+    if (arg === "--count" || arg === "-c") {
+      countArg = args[i + 1];
+      break;
+    }
+
+    if (arg.startsWith("--count=")) {
+      countArg = arg.slice("--count=".length);
+      break;
+    }
+
+    if (!arg.startsWith("-") && countArg === undefined) {
+      countArg = arg;
+      break;
+    }
+  }
+
+  if (countArg === undefined) {
+    return DEFAULT_COUNT;
+  }
+
+  if (!/^\d+$/.test(countArg)) {
+    throw new Error(
+      `Invalid count \"${countArg}\". Use a positive integer, e.g. 100 or --count 100.`,
+    );
+  }
+
+  const count = Number(countArg);
+  if (!Number.isSafeInteger(count) || count <= 0) {
+    throw new Error(
+      `Invalid count \"${countArg}\". Use a positive safe integer greater than 0.`,
+    );
+  }
+
+  return count;
+};
+
 const main = async (): Promise<void> => {
+  const count = parseCountFromArgs(process.argv.slice(2));
   const output = {
-    count: 100,
-    pairs: generatePairs(100),
+    count,
+    pairs: generatePairs(count),
   };
 
   const outDir = resolve(fileURLToPath(new URL(".", import.meta.url)), "out");
   await mkdir(outDir, { recursive: true });
 
-  // JSOn
+  // JSON
   await writeFile(
     resolve(outDir, "coord-pairs.json"),
     `${JSON.stringify(output, null, 2)}\n`,
