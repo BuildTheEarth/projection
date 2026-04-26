@@ -7,7 +7,6 @@ import net.buildtheearth.model.MinecraftCoordinate;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class ProjectionTest {
 			assertNotNull(pair, "Coordinate pair at index " + i + " must not be null");
 			GeographicalCoordinate geographicalCoordinate = new GeographicalCoordinate(pair.lat, pair.lon);
 
-			MinecraftCoordinate projected = Projection.convertFromGeo(geographicalCoordinate);
+			MinecraftCoordinate projected = Projection.toMinecraft(geographicalCoordinate);
 			assertEquals(pair.x, projected.x(), EPSILON, "x mismatch at pair index " + i);
 			assertEquals(pair.z, projected.z(), EPSILON, "z mismatch at pair index " + i);
 		}

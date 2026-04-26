@@ -30,7 +30,7 @@ public class Projection {
      * @param coordinate The minecraft coordinates to convert.
      * @return - WG84 EPSG:4979 coordinates as a GeographicalCoordinate object
      */
-    public static GeographicalCoordinate convertToGeo(MinecraftCoordinate coordinate) throws OutOfProjectionBoundsException {
+    public static GeographicalCoordinate toGeo(MinecraftCoordinate coordinate) throws OutOfProjectionBoundsException {
         double[] res = projection.toGeo(coordinate.x(), coordinate.z());
         return new GeographicalCoordinate(res[0], res[1]);
     }
@@ -41,10 +41,10 @@ public class Projection {
      * @param coordinates The minecraft coordinates to convert.
      * @return - WG84 EPSG:4979 coordinates as a GeographicalCoordinate object
      */
-    public static GeographicalCoordinate[] convertToGeo(MinecraftCoordinate[] coordinates) throws OutOfProjectionBoundsException {
+    public static GeographicalCoordinate[] toGeo(MinecraftCoordinate[] coordinates) throws OutOfProjectionBoundsException {
         GeographicalCoordinate[] res = new GeographicalCoordinate[coordinates.length];
         for (int i = 0; i < coordinates.length; i++) {
-            res[i] = convertToGeo(coordinates[i]);
+            res[i] = toGeo(coordinates[i]);
         }
         return res;
     }
@@ -55,7 +55,7 @@ public class Projection {
      * @param coordinate Geographical coordinate
      * @return The in-game coordinates (x, z)
      */
-    public static MinecraftCoordinate convertFromGeo(GeographicalCoordinate coordinate) throws OutOfProjectionBoundsException {
+    public static MinecraftCoordinate toMinecraft(GeographicalCoordinate coordinate) throws OutOfProjectionBoundsException {
             double[] result = projection.fromGeo(coordinate.longitude(), coordinate.latitude());
             return new MinecraftCoordinate(result[0], result[1]);
     }
@@ -66,10 +66,10 @@ public class Projection {
      * @param coordinate Geographical coordinates
      * @return The in-game coordinates (x, z)
      */
-    public static MinecraftCoordinate[] convertFromGeo(GeographicalCoordinate[] coordinate) throws OutOfProjectionBoundsException {
+    public static MinecraftCoordinate[] toMinecraft(GeographicalCoordinate[] coordinate) throws OutOfProjectionBoundsException {
         MinecraftCoordinate[] res = new MinecraftCoordinate[coordinate.length];
         for (int i = 0; i < coordinate.length; i++) {
-            res[i] = convertFromGeo(coordinate[i]);
+            res[i] = toMinecraft(coordinate[i]);
         }
         return res;
     }

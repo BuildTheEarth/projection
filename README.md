@@ -17,9 +17,9 @@ _Multilanguage implementation of the BuildTheEarth projection._
 
 This repository contains the conversion code in the following languages:
 
-| Language   | Folder        | Repository |
-| ---------- | ------------- | ---------- |
-| Java       | `java/`       |            |
-| TypeScript | `typescript/` |            |
+| Language   | Folder        | 
+| ---------- | ------------- | 
+| Java       | `java/`       |
 
-## Usage
+## Contribute
+To contribute, read [the specification](core-spec/SPECIFICATION.md) and create a pull request when you have finished implementing the new language.
