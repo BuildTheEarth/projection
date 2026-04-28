@@ -1,13 +1,17 @@
 name: Gradle Package
 
 on:
-  release:
-    types: [created]
+  push:
+    paths:
+      - 'java/**'
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: java
     permissions:
       contents: read
       packages: write
