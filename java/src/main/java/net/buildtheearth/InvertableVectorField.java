@@ -1,8 +1,5 @@
 package net.buildtheearth;
 
-
-import net.buildtheearth.MathUtils;
-
 public class InvertableVectorField {
 
     private double[][] VECTOR_X;
