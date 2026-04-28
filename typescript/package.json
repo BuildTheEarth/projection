@@ -4,6 +4,10 @@
   "description": "Multilanguage implementation of the BuildTheEarth projection",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BuildTheEarth/projection"
+  },
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
