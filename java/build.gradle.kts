@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("maven-publish")
 }
 
 group = "net.buildtheearth"
@@ -19,4 +20,23 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("projection") {
+            from(components["java"])
+        }
+    }
+
+    repositories {
+        maven {
+            name = "BuildTheEarth"
+            url = uri("https://maven.buildtheearth.net/releases")
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
 }
