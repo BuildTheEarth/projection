@@ -2,6 +2,7 @@ package net.buildtheearth;
 
 import net.buildtheearth.model.GeographicalCoordinate;
 import net.buildtheearth.model.MinecraftCoordinate;
+import org.jspecify.annotations.NonNull;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -30,8 +31,17 @@ public class Projection {
      * @param coordinate The minecraft coordinates to convert.
      * @return - WG84 EPSG:4979 coordinates as a GeographicalCoordinate object
      */
-    public static GeographicalCoordinate toGeo(MinecraftCoordinate coordinate) throws OutOfProjectionBoundsException {
-        double[] res = projection.toGeo(coordinate.x(), coordinate.z());
+    public static @NonNull GeographicalCoordinate toGeo(@NonNull MinecraftCoordinate coordinate) throws OutOfProjectionBoundsException {
+        return toGeo(coordinate.x(), coordinate.z());
+    }
+
+    /**
+     * Converts Minecraft coordinates to geographic coordinates
+     *
+     * @return - WG84 EPSG:4979 coordinates as a GeographicalCoordinate object
+     */
+    public static @NonNull GeographicalCoordinate toGeo(double x, double z) throws OutOfProjectionBoundsException {
+        double[] res = projection.toGeo(x, z);
         return new GeographicalCoordinate(res[1], res[0]);
     }
 
@@ -55,9 +65,20 @@ public class Projection {
      * @param coordinate Geographical coordinate
      * @return The in-game coordinates (x, z)
      */
-    public static MinecraftCoordinate toMinecraft(GeographicalCoordinate coordinate) throws OutOfProjectionBoundsException {
-            double[] result = projection.fromGeo(coordinate.longitude(), coordinate.latitude());
-            return new MinecraftCoordinate(result[0], result[1]);
+    public static @NonNull MinecraftCoordinate toMinecraft(@NonNull GeographicalCoordinate coordinate) throws OutOfProjectionBoundsException {
+        return toMinecraft(coordinate.latitude(), coordinate.longitude());
+    }
+
+    /**
+     * Gets in-game coordinates from geographical location
+     *
+     * @param latitude Latitude of the Geographical Coordinate
+     * @param longitude Longitude of the Geographical Coordinate
+     * @return The in-game coordinates (x, z)
+     */
+    public static @NonNull MinecraftCoordinate toMinecraft(double latitude, double longitude) throws OutOfProjectionBoundsException {
+        double[] result = projection.fromGeo(longitude, latitude);
+        return new MinecraftCoordinate(result[0], result[1]);
     }
 
     /**
